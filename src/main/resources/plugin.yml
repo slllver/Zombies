@@ -1,3 +1,5 @@
-name: Zombies
-main: me.zilver.Zombies
-version: 0.0.1
+name: ${project.name}
+version: ${project.version}
+main: me.silver.Zombies
+author: Silver
+description: A plugin made for the UTC's Drill Server to add custom mob AI
