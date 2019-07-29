@@ -1,10 +1,16 @@
 package me.silver.mob;
 
+import me.silver.Zombies;
+import me.silver.util.EquipmentUtils;
 import me.silver.util.PathfinderGoalTargetBySpeed;
 import net.minecraft.server.v1_12_R1.*;
+import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 import javax.annotation.Nullable;
+import java.util.HashMap;
 
 public class MineZombie extends EntityZombie {
 
@@ -12,12 +18,15 @@ public class MineZombie extends EntityZombie {
 
     public MineZombie(World world) {
         super(world);
+
+        this.prepare(this.world.D(new BlockPosition(this)), null);
     }
 
     public MineZombie(World world, Inventory inventory) {
-        this(world);
+        super(world);
 
         this.inventory = inventory;
+        this.prepare(this.world.D(new BlockPosition(this)), null);
     }
 
     // Initialize AI tasks
@@ -31,14 +40,60 @@ public class MineZombie extends EntityZombie {
         this.targetSelector.a(2, new PathfinderGoalTargetBySpeed<>(this, EntityHuman.class, true));
     }
 
+    private void log(String message) {
+        Zombies.getInstance().getLogger().info(message);
+    }
+
     // Additional code called on spawn (setting gear, spawning as baby/with chicken, etc)
     @Override
     public GroupDataEntity prepare(DifficultyDamageScaler dds, GroupDataEntity gde) {
         gde = super.prepare(dds, gde);
-
+        // Attempt to equip best armor/weapon in the given inventory
         if (this.inventory != null) {
-            // Set inventory to that one
+            HashMap<EnumItemSlot, ItemStack> items = new HashMap<>();
+            HashMap<EnumItemSlot, Integer> values = new HashMap<>();
+
+            for (ItemStack itemStack : inventory.getContents()) {
+                if (itemStack != null) {
+//                    log(itemStack.getType().name());
+                    EnumItemSlot slot = EquipmentUtils.getSlot(itemStack.getType());
+
+                    if (slot != null) {
+//                        log(slot.name());
+
+                        int tier = EquipmentUtils.getTier(itemStack.getType());
+//                        log(String.valueOf(tier));
+
+                        if (values.containsKey(slot)) {
+                            if (tier > values.get(slot)) {
+                                values.replace(slot, tier);
+                                items.replace(slot, itemStack);
+//                                log("Found a better item");
+                            }
+                        } else {
+                            values.put(slot, tier);
+                            items.put(slot, itemStack);
+//                            log("Found an item");
+                        }
+                    }
+//                    log("\n");
+                }
+            }
+
+            for (EnumItemSlot slot : items.keySet()) {
+                this.setSlot(slot, CraftItemStack.asNMSCopy(items.get(slot)));
+            }
+
+            // Tell zombie thing not to drop its equipment because it's still in the inventory
+            this.dropChanceArmor = new float[]{0F, 0F, 0F, 0F};
+            this.dropChanceHand[EnumItemSlot.MAINHAND.b()] = 0F;
         }
+
+//        ItemStack itemStack = new ItemStack(org.bukkit.Material.CHAINMAIL_HELMET);
+//        this.setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack));
+//
+//        System.out.println("Made it here");
+
 
         // Set to adult and remove mount
         // bJ() returns the entity that the current Zombie is riding
@@ -52,6 +107,47 @@ public class MineZombie extends EntityZombie {
         return gde;
     }
 
+    // Drop all items on death
+    @Override
+    public void die(DamageSource damageSource) {
+        super.die(damageSource);
+
+        org.bukkit.World world = this.getWorld().getWorld();
+        Location location = new Location(world, this.locX, this.locY, this.locZ);
+
+        for (ItemStack itemStack : inventory.getContents()) {
+            if (itemStack != null) {
+                world.dropItemNaturally(location, itemStack);
+            }
+        }
+    }
+
+//    private void equipItems(String type) {
+//        ItemStack itemToEquip = null;
+//        int highestValue = -1;
+//
+//        for (ItemStack itemStack : inventory.getContents()) {
+//            String materialName = itemStack.getType().toString();
+//            org.bukkit.Material material = itemStack.getType();
+//
+//            if (materialName.contains(type)) {
+//                int value = EquipmentUtils.getTier(material);
+//
+//                if (value > highestValue) {
+//                    highestValue = value;
+//                    itemToEquip = itemStack;
+//                }
+//            }
+//        }
+//
+//        EnumItemSlot slot = EquipmentUtils.getSlot(type);
+//
+//        if (itemToEquip != null && slot != null) {
+//            this.setSlot(slot, CraftItemStack.asNMSCopy(itemToEquip));
+//        }
+//
+//    }
+
     // Set mob attributes
     @Override
     protected void initAttributes() {
@@ -63,5 +159,12 @@ public class MineZombie extends EntityZombie {
     @Override
     public boolean p() {
         return false;
+    }
+
+    // Prevent default drops from loot table?
+    // TODO: Figure out custom loot tables
+    @Override
+    protected MinecraftKey J() {
+        return null;
     }
 }

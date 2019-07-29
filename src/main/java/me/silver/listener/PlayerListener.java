@@ -55,10 +55,10 @@ public class PlayerListener implements Listener {
             playerSpeed.setSpeed(speed);
             playerSpeed.setTaskId(removeSpeedTask);
 
-            Vector notY = new Vector(speed.getX(), 0, speed.getZ());
-            if (notY.length() > 0) {
-                plugin.getLogger().info(new DecimalFormat("#.###").format(notY.length()));
-            }
+//            Vector notY = new Vector(speed.getX(), 0, speed.getZ());
+//            if (notY.length() > 0) {
+//                plugin.getLogger().info(new DecimalFormat("#.###").format(notY.length()));
+//            }
         } else {
             PlayerSpeed.add(new PlayerSpeed(player.getName(), speed, removeSpeedTask));
         }

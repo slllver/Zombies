@@ -1,5 +1,6 @@
 package me.silver;
 
+import me.silver.command.CreateZombie;
 import me.silver.listener.PlayerListener;
 import me.silver.mob.MineZombie;
 import me.silver.util.NMSUtils;
@@ -18,6 +19,7 @@ public class Zombies extends JavaPlugin {
     public void onEnable() {
         plugin = this;
 
+        this.getCommand("createzombie").setExecutor(new CreateZombie());
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         registerEntities();

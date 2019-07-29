@@ -3,3 +3,9 @@ version: ${project.version}
 main: me.silver.Zombies
 author: Silver
 description: A plugin made for the UTC's Drill Server to add custom mob AI
+commands:
+  createzombie:
+    description: Creates a custom zombie with an inventory from a given chest
+    usage: /createzombie (must be looking at a chest)
+    aliases:
+      - cz
