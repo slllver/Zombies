@@ -2,6 +2,7 @@ package me.silver.command;
 
 import me.silver.Zombies;
 import me.silver.mob.MineZombie;
+import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -39,6 +40,7 @@ public class CreateZombie implements CommandExecutor {
                 MineZombie zombie = new MineZombie(world, inventory);
 
                 targetBlock.setType(Material.AIR);
+                zombie.prepare(world.D(new BlockPosition(zombie)), null);
                 zombie.setLocation(targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5, 0, 0);
                 world.addEntity(zombie);
 

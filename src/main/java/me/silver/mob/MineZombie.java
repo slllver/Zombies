@@ -9,7 +9,6 @@ import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import javax.annotation.Nullable;
 import java.util.HashMap;
 
 public class MineZombie extends EntityZombie {
@@ -18,15 +17,12 @@ public class MineZombie extends EntityZombie {
 
     public MineZombie(World world) {
         super(world);
-
-        this.prepare(this.world.D(new BlockPosition(this)), null);
     }
 
     public MineZombie(World world, Inventory inventory) {
-        super(world);
+        this(world);
 
         this.inventory = inventory;
-        this.prepare(this.world.D(new BlockPosition(this)), null);
     }
 
     // Initialize AI tasks
@@ -48,6 +44,7 @@ public class MineZombie extends EntityZombie {
     @Override
     public GroupDataEntity prepare(DifficultyDamageScaler dds, GroupDataEntity gde) {
         gde = super.prepare(dds, gde);
+
         // Attempt to equip best armor/weapon in the given inventory
         if (this.inventory != null) {
             HashMap<EnumItemSlot, ItemStack> items = new HashMap<>();
@@ -55,28 +52,21 @@ public class MineZombie extends EntityZombie {
 
             for (ItemStack itemStack : inventory.getContents()) {
                 if (itemStack != null) {
-//                    log(itemStack.getType().name());
                     EnumItemSlot slot = EquipmentUtils.getSlot(itemStack.getType());
 
                     if (slot != null) {
-//                        log(slot.name());
-
                         int tier = EquipmentUtils.getTier(itemStack.getType());
-//                        log(String.valueOf(tier));
 
                         if (values.containsKey(slot)) {
                             if (tier > values.get(slot)) {
                                 values.replace(slot, tier);
                                 items.replace(slot, itemStack);
-//                                log("Found a better item");
                             }
                         } else {
                             values.put(slot, tier);
                             items.put(slot, itemStack);
-//                            log("Found an item");
                         }
                     }
-//                    log("\n");
                 }
             }
 
