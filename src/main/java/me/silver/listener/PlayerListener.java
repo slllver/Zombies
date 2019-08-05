@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
@@ -16,6 +17,11 @@ import java.text.DecimalFormat;
 public class PlayerListener implements Listener {
 
     private static Zombies plugin = Zombies.getInstance();
+
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent entityDeathEvent) {
+        plugin.getLogger().info(entityDeathEvent.getEntity().getType().name());
+    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {

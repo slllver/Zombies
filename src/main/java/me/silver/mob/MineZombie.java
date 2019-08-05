@@ -105,9 +105,11 @@ public class MineZombie extends EntityZombie {
         org.bukkit.World world = this.getWorld().getWorld();
         Location location = new Location(world, this.locX, this.locY, this.locZ);
 
-        for (ItemStack itemStack : inventory.getContents()) {
-            if (itemStack != null) {
-                world.dropItemNaturally(location, itemStack);
+        if (inventory != null) {
+            for (ItemStack itemStack : inventory.getContents()) {
+                if (itemStack != null) {
+                    world.dropItemNaturally(location, itemStack);
+                }
             }
         }
     }
