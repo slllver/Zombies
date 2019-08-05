@@ -1,4 +1,4 @@
-package me.silver.Event;
+package me.silver.event;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;

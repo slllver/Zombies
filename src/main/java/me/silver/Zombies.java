@@ -1,6 +1,8 @@
 package me.silver;
 
+import co.aikar.commands.PaperCommandManager;
 import me.silver.command.CreateZombie;
+import me.silver.command.WaveRoom;
 import me.silver.listener.PlayerListener;
 import me.silver.mob.MineZombie;
 import me.silver.util.NMSUtils;
@@ -23,10 +25,17 @@ public class Zombies extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         registerEntities();
+        registerCommands();
     }
 
     private void registerEntities() {
         NMSUtils.registerEntity("mine_zombie", NMSUtils.Type.ZOMBIE, MineZombie.class, false);
+    }
+
+    private void registerCommands() {
+        PaperCommandManager manager = new PaperCommandManager(this);
+
+        manager.registerCommand(new WaveRoom());
     }
 
     public static void sendActionBar(Player player, String message) {
