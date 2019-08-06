@@ -1,12 +1,10 @@
-package me.silver.util;
+package me.silver.zombies.util;
 
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.util.Vector;
 
 import java.util.Objects;
-import java.util.function.Function;
 
 public class PathfinderGoalTargetBySpeed<T extends EntityLiving> extends PathfinderGoalTarget {
 

@@ -1,6 +1,6 @@
-package me.silver.util;
+package me.silver.zombies.util;
 
-import me.silver.Zombies;
+import me.silver.zombies.Zombies;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;

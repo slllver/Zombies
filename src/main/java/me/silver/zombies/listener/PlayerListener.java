@@ -1,8 +1,8 @@
-package me.silver.listener;
+package me.silver.zombies.listener;
 
 
-import me.silver.Zombies;
-import me.silver.util.PlayerSpeed;
+import me.silver.zombies.Zombies;
+import me.silver.zombies.util.PlayerSpeed;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

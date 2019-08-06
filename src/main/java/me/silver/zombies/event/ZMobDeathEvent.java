@@ -1,4 +1,4 @@
-package me.silver.event;
+package me.silver.zombies.event;
 
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Cancellable;

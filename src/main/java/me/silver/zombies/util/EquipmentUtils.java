@@ -1,4 +1,4 @@
-package me.silver.util;
+package me.silver.zombies.util;
 
 import net.minecraft.server.v1_12_R1.EnumItemSlot;
 import org.bukkit.Material;

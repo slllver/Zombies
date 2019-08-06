@@ -1,8 +1,8 @@
-package me.silver.mob;
+package me.silver.zombies.mob;
 
-import me.silver.Zombies;
-import me.silver.util.EquipmentUtils;
-import me.silver.util.PathfinderGoalTargetBySpeed;
+import me.silver.zombies.Zombies;
+import me.silver.zombies.util.EquipmentUtils;
+import me.silver.zombies.util.PathfinderGoalTargetBySpeed;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;

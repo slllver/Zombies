@@ -1,4 +1,4 @@
-package me.silver.util;
+package me.silver.zombies.util;
 
 import java.lang.reflect.Field;
 import java.util.Iterator;

@@ -1,5 +1,6 @@
-package me.silver;
+package me.silver.zombies;
 
+import net.minecraft.server.v1_12_R1.EntityZombie;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -15,6 +16,10 @@ public class Room {
 
     private Random random;
 
+    public Room(Location cornerOne, Location cornerTwo) {
+        this(cornerOne.getWorld(), cornerOne.toVector(), cornerTwo.toVector());
+    }
+
     public Room(World world, Vector cornerOne, Vector cornerTwo) {
         this.world = world;
         this.cornerOne = cornerOne;
@@ -25,7 +30,9 @@ public class Room {
         // TODO: Verify that room doesn't overlap with other rooms?
     }
 
+    public void spawnZombie(Class<? extends EntityZombie> zombie) {
 
+    }
 
     public World getWorld() {
         return world;

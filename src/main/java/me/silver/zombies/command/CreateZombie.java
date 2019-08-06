@@ -1,7 +1,7 @@
-package me.silver.command;
+package me.silver.zombies.command;
 
-import me.silver.Zombies;
-import me.silver.mob.MineZombie;
+import me.silver.zombies.Zombies;
+import me.silver.zombies.mob.MineZombie;
 import net.minecraft.server.v1_12_R1.BlockPosition;
 import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.Bukkit;
