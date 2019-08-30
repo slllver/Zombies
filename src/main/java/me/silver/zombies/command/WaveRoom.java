@@ -3,6 +3,7 @@ package me.silver.zombies.command;
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
 import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Optional;
 import co.aikar.commands.annotation.Subcommand;
 import me.silver.zombies.Room;
 import org.bukkit.Location;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+// TODO: Rename command class to reduce ambiguity between WaveRoom.java and Room.java
 @CommandAlias("wr")
 public class WaveRoom extends BaseCommand {
 
@@ -78,4 +80,25 @@ public class WaveRoom extends BaseCommand {
         }
     }
 
+    @Subcommand("spawn")
+    public static void spawn(CommandSender sender, String roomName, int count) {
+        Room room = rooms.get(roomName);
+
+        if (room != null) {
+            room.spawnZombie(count);
+
+            sender.sendMessage("Spawned zombie(s)");
+        } else {
+            sender.sendMessage("Couldn't find room " + roomName);
+        }
+    }
+
+    @Subcommand("xp")
+    public static void xp(CommandSender sender, float level) {
+        if (sender instanceof Player) {
+            Player player = (Player)sender;
+
+            player.setExp(level);
+        }
+    }
 }
