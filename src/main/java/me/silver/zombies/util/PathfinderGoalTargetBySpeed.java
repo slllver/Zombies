@@ -3,6 +3,7 @@ package me.silver.zombies.util;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityTargetEvent;
+import org.bukkit.util.Vector;
 
 import java.util.Objects;
 
@@ -28,8 +29,12 @@ public class PathfinderGoalTargetBySpeed<T extends EntityLiving> extends Pathfin
     @Override
     public boolean a() {
         if (this.targetEntityType == EntityHuman.class || this.targetEntityType == EntityPlayer.class) {
-            EntityHuman entityHuman = this.e.world.a(this.e.locX, (double) this.e.getHeadHeight(), this.e.locZ, this.i(), this.i(), targetPlayer -> {
-                double modifier = 1.0D;
+            EntityHuman entityHuman = this.e.world.a(this.e.locX, this.e.getHeadHeight(), this.e.locZ, this.i(), this.i(), targetPlayer -> {
+                double modifier = 0;
+
+                if (targetPlayer != null) {
+                    modifier = targetPlayer.exp;
+                }
 
                 // Reduce visibility if player is wearing a zombie head
                 // ItemStack.i() returns the item damage value, with 2 being the value for zombie head

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;
@@ -18,10 +19,10 @@ public class PlayerListener implements Listener {
 
     private static Zombies plugin = Zombies.getInstance();
 
-    @EventHandler
-    public void onEntityDeath(EntityDeathEvent entityDeathEvent) {
-        plugin.getLogger().info(entityDeathEvent.getEntity().getType().name());
-    }
+//    @EventHandler
+//    public void onEntityDeath(EntityDeathEvent entityDeathEvent) {
+//        plugin.getLogger().info(entityDeathEvent.getEntity().getType().name());
+//    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -48,6 +49,8 @@ public class PlayerListener implements Listener {
             if (PlayerSpeed.containsPlayer(player.getName())) {
                 PlayerSpeed playerSpeed = PlayerSpeed.getPlayerSpeed(player.getName());
                 playerSpeed.setSpeed(new Vector(0, 0, 0));
+
+                player.setExp(0.17f);
             }
         }, 5L);
 
@@ -60,6 +63,8 @@ public class PlayerListener implements Listener {
 
             playerSpeed.setSpeed(speed);
             playerSpeed.setTaskId(removeSpeedTask);
+
+            player.setExp((float)Math.max(Math.min(speed.length() * 8 - 1.478, 1), 0.17));
 
 //            Vector notY = new Vector(speed.getX(), 0, speed.getZ());
 //            if (notY.length() > 0) {

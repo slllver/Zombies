@@ -47,6 +47,10 @@ public class PlayerSpeed {
         return new PlayerSpeed(playerName, new Vector(0, 0, 0), -1);
     }
 
+    public double length() {
+        return Math.sqrt(this.speed.getX() * this.speed.getX()  + this.speed.getZ() * this.speed.getZ());
+    }
+
     public String getPlayer() {
         return name;
     }
