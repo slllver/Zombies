@@ -1,6 +1,7 @@
 package me.silver.zombies.listener;
 
 
+import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import me.silver.zombies.Zombies;
 import me.silver.zombies.util.PlayerSpeed;
 import org.bukkit.Bukkit;
@@ -64,7 +65,7 @@ public class PlayerListener implements Listener {
             playerSpeed.setSpeed(speed);
             playerSpeed.setTaskId(removeSpeedTask);
 
-            player.setExp((float)Math.max(Math.min(speed.length() * 8 - 1.478, 1), 0.17));
+            player.setExp((float)Math.max(Math.min(playerSpeed.length() * 8 - 1.478, 1), 0.17));
 
 //            Vector notY = new Vector(speed.getX(), 0, speed.getZ());
 //            if (notY.length() > 0) {
