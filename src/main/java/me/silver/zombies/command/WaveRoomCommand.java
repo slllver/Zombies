@@ -1,11 +1,9 @@
 package me.silver.zombies.command;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Optional;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import me.silver.zombies.Room;
+import me.silver.zombies.util.Pair;
 import me.silver.zombies.waveroom.WaveMobTemplate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -17,11 +15,12 @@ import org.bukkit.command.BlockCommandSender;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 // TODO: Rename command class to reduce ambiguity between WaveRoom.java and Room.java
 @CommandAlias("wr")
@@ -65,37 +64,90 @@ public class WaveRoomCommand extends BaseCommand {
     }
 
     @Subcommand("spawn")
-    public static void spawn(CommandSender sender, String roomName, int count) {
+    public static void spawn(CommandSender sender, String roomName, int count, @Optional String queryString) {
         Room room = rooms.get(roomName);
 
         if (room != null) {
 
-            for (int i = 0; i < count; i++) {
-                room.spawnZombie(null);
+            if (queryString == null) {
+                for (int i = 0; i < count; i++) {
+                    room.spawnZombie(null);
+                }
+            } else if (templates.containsKey(queryString)) {
+                for (int i = 0; i < count; i++) {
+                    room.spawnZombie(templates.get(queryString));
+                }
+            } else {
+                List<Pair<Integer, String>> numbers = new ArrayList<>();
+                List<Pair<Integer, String>> percents = new ArrayList<>();
+
+                int totalPercent = 0;
+                int mobsToSpawn = 0;
+
+                Pattern pattern = Pattern.compile("^(\\d+)(%?)([A-Za-z]+)?$");
+
+                for (String s : queryString.split(",")) {
+                    Matcher matcher = pattern.matcher(s);
+
+                    if (matcher.find()) {
+                        int number = Integer.parseInt(matcher.group(1));
+                        String template = matcher.group(3);
+
+                        if (matcher.group(2).contains("%")) {
+                            percents.add(new Pair<>(number, template));
+                            totalPercent += number;
+                        } else {
+                            numbers.add(new Pair<>(number, template));
+                            mobsToSpawn += number;
+                        }
+                    } else {
+                        sender.sendMessage("Error: '" + s + "' is not a valid query");
+                        return;
+                    }
+                }
+
+                if ((mobsToSpawn != count && totalPercent != 100) || mobsToSpawn > count) {
+                    sender.sendMessage("Error: Spawn count doesn't add up");
+                    return;
+                } else {
+                    for (Pair<Integer, String> pair : numbers) {
+                        for (int i = 0; i < pair.getLeft(); i++) {
+                            room.spawnZombie(templates.get(pair.getRight()));
+                        }
+                    }
+
+                    int remaining = (count - mobsToSpawn);
+
+                    for (Pair<Integer, String> pair : percents) {
+                        for (int i = 0; i < remaining * ((double)pair.getLeft() / 100d); i++) {
+                            room.spawnZombie(templates.get(pair.getRight()));
+                        }
+                    }
+                }
             }
 
             sender.sendMessage("Spawned zombie(s)");
         } else {
-            sender.sendMessage("Couldn't find room " + roomName);
+            sender.sendMessage("Error: Couldn't find room " + roomName);
         }
     }
 
-    @Subcommand("st")
-    public static void spawn(CommandSender sender, String roomName, String templateName, int count) {
-        Room room = rooms.get(roomName);
-        WaveMobTemplate template = templates.get(templateName);
-
-        if (room != null && template != null) {
-
-            for (int i = 0; i < count; i++) {
-                room.spawnZombie(template);
-            }
-
-            sender.sendMessage("Spawned zombie(s)");
-        } else {
-            sender.sendMessage("Couldn't find room " + roomName);
-        }
-    }
+//    @Subcommand("st")
+//    public static void spawn(CommandSender sender, String roomName, String templateName, int count) {
+//        Room room = rooms.get(roomName);
+//        WaveMobTemplate template = templates.get(templateName);
+//
+//        if (room != null && template != null) {
+//
+//            for (int i = 0; i < count; i++) {
+//                room.spawnZombie(template);
+//            }
+//
+//            sender.sendMessage("Spawned zombie(s)");
+//        } else {
+//            sender.sendMessage("Couldn't find room " + roomName);
+//        }
+//    }
 
     @Subcommand("template")
     public static void createTemplate(CommandSender sender, String id, int x, int y, int z, boolean isBaby, double health, double speed, double attackDamage) {

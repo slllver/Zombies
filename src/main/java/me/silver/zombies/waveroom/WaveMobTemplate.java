@@ -19,7 +19,7 @@ public class WaveMobTemplate {
 
     public WaveMobTemplate(World world, Inventory inventory, boolean isBaby, double health, double speed, double attackDamage) {
         this.world = world;
-        this.inventory = inventory;
+        this.inventory = cloneInventory(inventory);
         this.isBaby = isBaby;
         this.health = health;
         this.speed = speed;
@@ -33,7 +33,7 @@ public class WaveMobTemplate {
         return zombie;
     }
 
-    private Inventory cloneInventory(Inventory inventory) {
+    private static Inventory cloneInventory(Inventory inventory) {
         Inventory newInventory = Bukkit.createInventory(null, inventory.getSize());
 
         for (ItemStack itemStack : inventory.getContents()) {
