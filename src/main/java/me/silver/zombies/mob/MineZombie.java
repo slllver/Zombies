@@ -28,7 +28,7 @@ public class MineZombie extends EntityZombie implements iCustomMob {
     }
 
     @Override
-    public iCustomMob setup(double x, double y, double z, Inventory inventory, boolean isBaby, double health, double speed, double attackDamage) {
+    public void setup(double x, double y, double z, Inventory inventory, boolean isBaby, double health, double speed, double attackDamage) {
         this.inventory = inventory;
         this.isBaby = isBaby;
 
@@ -37,7 +37,6 @@ public class MineZombie extends EntityZombie implements iCustomMob {
         this.world.addEntity(this);
         this.setAttributes(health, speed, attackDamage);
 
-        return this;
     }
 
     public static MineZombie spawn(World world, double x, double y, double z, Inventory inventory, boolean isBaby, double health, double speed, double attackDamage) {

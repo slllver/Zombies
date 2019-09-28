@@ -1,15 +1,11 @@
 package me.silver.zombies.listener;
 
-
-import com.destroystokyo.paper.event.player.PlayerJumpEvent;
 import me.silver.zombies.Zombies;
 import me.silver.zombies.util.PlayerSpeed;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.util.Vector;

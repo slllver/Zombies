@@ -2,6 +2,7 @@ package me.silver.zombies;
 
 import co.aikar.commands.PaperCommandManager;
 import me.silver.zombies.command.CreateZombie;
+import me.silver.zombies.command.Explode;
 import me.silver.zombies.command.WaveRoomCommand;
 import me.silver.zombies.listener.PlayerListener;
 import me.silver.zombies.mob.MineZombie;
@@ -36,6 +37,7 @@ public class Zombies extends JavaPlugin {
         PaperCommandManager manager = new PaperCommandManager(this);
 
         manager.registerCommand(new WaveRoomCommand());
+        manager.registerCommand(new Explode());
     }
 
     public static void sendActionBar(Player player, String message) {
