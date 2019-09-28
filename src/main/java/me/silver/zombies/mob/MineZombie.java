@@ -1,8 +1,8 @@
-package me.silver.mob;
+package me.silver.zombies.mob;
 
-import me.silver.Zombies;
-import me.silver.util.EquipmentUtils;
-import me.silver.util.PathfinderGoalTargetBySpeed;
+import me.silver.zombies.Zombies;
+import me.silver.zombies.util.EquipmentUtils;
+import me.silver.zombies.util.PathfinderGoalTargetBySpeed;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.inventory.CraftItemStack;
@@ -11,18 +11,44 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 
-public class MineZombie extends EntityZombie {
+public class MineZombie extends EntityZombie implements iCustomMob {
 
-    private Inventory inventory;
+    public Inventory inventory;
+    public boolean isBaby;
 
     public MineZombie(World world) {
         super(world);
     }
 
-    public MineZombie(World world, Inventory inventory) {
+    public MineZombie(World world, Inventory inventory, boolean isBaby) {
         this(world);
 
         this.inventory = inventory;
+        this.isBaby = isBaby;
+    }
+
+    @Override
+    public void setup(double x, double y, double z, Inventory inventory, boolean isBaby, double health, double speed, double attackDamage) {
+        this.inventory = inventory;
+        this.isBaby = isBaby;
+
+        this.prepare(this.world.D(new BlockPosition(this)), null);
+        this.setPosition(x, y, z);
+        this.world.addEntity(this);
+        this.setAttributes(health, speed, attackDamage);
+
+    }
+
+    public static MineZombie spawn(World world, double x, double y, double z, Inventory inventory, boolean isBaby, double health, double speed, double attackDamage) {
+        MineZombie zombie = new MineZombie(world, inventory, isBaby);
+
+        zombie.prepare(world.D(new BlockPosition(zombie)), null);
+        zombie.setLocation(x, y, z, 0, 0);
+        world.addEntity(zombie);
+
+        zombie.setAttributes(health, speed, attackDamage);
+
+        return zombie;
     }
 
     // Initialize AI tasks
@@ -44,6 +70,11 @@ public class MineZombie extends EntityZombie {
     @Override
     public GroupDataEntity prepare(DifficultyDamageScaler dds, GroupDataEntity gde) {
         gde = super.prepare(dds, gde);
+
+        // Clear any armor/weapons that the zombie may have spawned with
+        // aO() is the obf name for getHeldEquipment()
+        ((NonNullList)this.aO()).clear();
+        ((NonNullList)this.getArmorItems()).clear();
 
         // Attempt to equip best armor/weapon in the given inventory
         if (this.inventory != null) {
@@ -72,6 +103,7 @@ public class MineZombie extends EntityZombie {
 
             for (EnumItemSlot slot : items.keySet()) {
                 this.setSlot(slot, CraftItemStack.asNMSCopy(items.get(slot)));
+//                inventory.remove(items.get(slot));
             }
 
             // Tell zombie thing not to drop its equipment because it's still in the inventory
@@ -79,15 +111,9 @@ public class MineZombie extends EntityZombie {
             this.dropChanceHand[EnumItemSlot.MAINHAND.b()] = 0F;
         }
 
-//        ItemStack itemStack = new ItemStack(org.bukkit.Material.CHAINMAIL_HELMET);
-//        this.setSlot(EnumItemSlot.HEAD, CraftItemStack.asNMSCopy(itemStack));
-//
-//        System.out.println("Made it here");
-
-
         // Set to adult and remove mount
         // bJ() returns the entity that the current Zombie is riding
-        this.setBaby(false);
+        this.setBaby(isBaby);
         Entity mount = this.bJ();
 
         if (mount != null) {
@@ -95,6 +121,17 @@ public class MineZombie extends EntityZombie {
         }
 
         return gde;
+    }
+
+    public void setEquipmentDropChance(float chance) {
+        if (chance > 1.0) {
+            chance = 1F;
+        } else if (chance < 0) {
+            chance = 0F;
+        }
+
+        this.dropChanceArmor = new float[]{chance, chance, chance, chance};
+        this.dropChanceHand[EnumItemSlot.MAINHAND.b()] = chance;
     }
 
     // Drop all items on death
@@ -105,54 +142,37 @@ public class MineZombie extends EntityZombie {
         org.bukkit.World world = this.getWorld().getWorld();
         Location location = new Location(world, this.locX, this.locY, this.locZ);
 
-        for (ItemStack itemStack : inventory.getContents()) {
-            if (itemStack != null) {
-                world.dropItemNaturally(location, itemStack);
+        if (inventory != null) {
+            for (ItemStack itemStack : inventory.getContents()) {
+                if (itemStack != null) {
+                    world.dropItemNaturally(location, itemStack);
+                }
             }
         }
     }
 
-//    private void equipItems(String type) {
-//        ItemStack itemToEquip = null;
-//        int highestValue = -1;
-//
-//        for (ItemStack itemStack : inventory.getContents()) {
-//            String materialName = itemStack.getType().toString();
-//            org.bukkit.Material material = itemStack.getType();
-//
-//            if (materialName.contains(type)) {
-//                int value = EquipmentUtils.getTier(material);
-//
-//                if (value > highestValue) {
-//                    highestValue = value;
-//                    itemToEquip = itemStack;
-//                }
-//            }
-//        }
-//
-//        EnumItemSlot slot = EquipmentUtils.getSlot(type);
-//
-//        if (itemToEquip != null && slot != null) {
-//            this.setSlot(slot, CraftItemStack.asNMSCopy(itemToEquip));
-//        }
-//
-//    }
-
     // Set mob attributes
-    @Override
-    protected void initAttributes() {
-        super.initAttributes();
-
+    private void setAttributes(double health, double speed, double attackDamage) {
+        this.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
+        this.getAttributeInstance(GenericAttributes.MOVEMENT_SPEED).setValue(speed);
+        this.getAttributeInstance(GenericAttributes.ATTACK_DAMAGE).setValue(attackDamage);
+        this.getAttributeInstance(a).setValue(0D); // Zombie reinforcements chance
     }
 
+    // Prevent experience orb drops
+    @Override
+    protected int getExpValue(EntityHuman entityhuman) {
+        return 0;
+    }
     // Disable burning in daylight
+
     @Override
     public boolean p() {
         return false;
     }
-
     // Prevent default drops from loot table?
     // TODO: Figure out custom loot tables
+
     @Override
     protected MinecraftKey J() {
         return null;

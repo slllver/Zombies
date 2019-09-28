@@ -1,9 +1,12 @@
-package me.silver;
+package me.silver.zombies;
 
-import me.silver.command.CreateZombie;
-import me.silver.listener.PlayerListener;
-import me.silver.mob.MineZombie;
-import me.silver.util.NMSUtils;
+import co.aikar.commands.PaperCommandManager;
+import me.silver.zombies.command.CreateZombie;
+import me.silver.zombies.command.Explode;
+import me.silver.zombies.command.WaveRoomCommand;
+import me.silver.zombies.listener.PlayerListener;
+import me.silver.zombies.mob.MineZombie;
+import me.silver.zombies.util.NMSUtils;
 import net.minecraft.server.v1_12_R1.ChatMessageType;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
 import net.minecraft.server.v1_12_R1.PacketPlayOutChat;
@@ -23,10 +26,18 @@ public class Zombies extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerListener(), this);
 
         registerEntities();
+        registerCommands();
     }
 
     private void registerEntities() {
         NMSUtils.registerEntity("mine_zombie", NMSUtils.Type.ZOMBIE, MineZombie.class, false);
+    }
+
+    private void registerCommands() {
+        PaperCommandManager manager = new PaperCommandManager(this);
+
+        manager.registerCommand(new WaveRoomCommand());
+        manager.registerCommand(new Explode());
     }
 
     public static void sendActionBar(Player player, String message) {

@@ -1,8 +1,10 @@
-package me.silver.command;
+package me.silver.zombies.command;
 
-import me.silver.Zombies;
-import me.silver.mob.MineZombie;
+import me.silver.zombies.Zombies;
+import me.silver.zombies.mob.MineZombie;
 import net.minecraft.server.v1_12_R1.BlockPosition;
+import net.minecraft.server.v1_12_R1.EntityZombie;
+import net.minecraft.server.v1_12_R1.GenericAttributes;
 import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -36,13 +38,17 @@ public class CreateZombie implements CommandExecutor {
                     }
                 }
 
-                World world = ((CraftWorld) player.getWorld()).getHandle();
-                MineZombie zombie = new MineZombie(world, inventory);
-
                 targetBlock.setType(Material.AIR);
-                zombie.prepare(world.D(new BlockPosition(zombie)), null);
-                zombie.setLocation(targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5, 0, 0);
-                world.addEntity(zombie);
+                World world = ((CraftWorld) player.getWorld()).getHandle();
+
+                MineZombie zombie = MineZombie.spawn(world, targetBlock.getX() + 0.5, targetBlock.getY(),
+                        targetBlock.getZ() + 0.5, inventory, false, 20, 0.23, 3);
+//
+//                EntityZombie zombie = new EntityZombie(world);
+//                world.addEntity(zombie);
+//                zombie.setLocation(targetBlock.getX() + 0.5, targetBlock.getY(), targetBlock.getZ() + 0.5, 0, 0);
+
+                zombie.getAttributeInstance(GenericAttributes.maxHealth).setValue(2);
 
                 player.sendMessage("Successfully created custom Zombie!");
                 Zombies.getInstance().getLogger().info("Successfully created MineZ Zombie at " + zombie.locX + " " + zombie.locY + " " + zombie.locZ);

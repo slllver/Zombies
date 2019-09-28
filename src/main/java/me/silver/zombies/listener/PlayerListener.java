@@ -1,8 +1,7 @@
-package me.silver.listener;
+package me.silver.zombies.listener;
 
-
-import me.silver.Zombies;
-import me.silver.util.PlayerSpeed;
+import me.silver.zombies.Zombies;
+import me.silver.zombies.util.PlayerSpeed;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,6 +15,11 @@ import java.text.DecimalFormat;
 public class PlayerListener implements Listener {
 
     private static Zombies plugin = Zombies.getInstance();
+
+//    @EventHandler
+//    public void onEntityDeath(EntityDeathEvent entityDeathEvent) {
+//        plugin.getLogger().info(entityDeathEvent.getEntity().getType().name());
+//    }
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
@@ -42,6 +46,8 @@ public class PlayerListener implements Listener {
             if (PlayerSpeed.containsPlayer(player.getName())) {
                 PlayerSpeed playerSpeed = PlayerSpeed.getPlayerSpeed(player.getName());
                 playerSpeed.setSpeed(new Vector(0, 0, 0));
+
+                player.setExp(0.17f);
             }
         }, 5L);
 
@@ -54,6 +60,8 @@ public class PlayerListener implements Listener {
 
             playerSpeed.setSpeed(speed);
             playerSpeed.setTaskId(removeSpeedTask);
+
+            player.setExp((float)Math.max(Math.min(playerSpeed.length() * 8 - 1.478, 1), 0.17));
 
 //            Vector notY = new Vector(speed.getX(), 0, speed.getZ());
 //            if (notY.length() > 0) {

@@ -1,6 +1,6 @@
 name: ${project.name}
 version: ${project.version}
-main: me.silver.Zombies
+main: me.silver.zombies.Zombies
 author: Silver
 description: A plugin made for the UTC's Drill Server to add custom mob AI
 commands:
@@ -9,3 +9,8 @@ commands:
     usage: /createzombie (must be looking at a chest)
     aliases:
       - cz
+#  waveroom:
+#    description: Creates a room in which zombies can be spawned in a controlled manner
+#    usade: idk
+#    aliases:
+#      - wr

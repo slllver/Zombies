@@ -1,6 +1,6 @@
-package me.silver.util;
+package me.silver.zombies.util;
 
-import me.silver.Zombies;
+import me.silver.zombies.Zombies;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -45,6 +45,10 @@ public class PlayerSpeed {
         }
 
         return new PlayerSpeed(playerName, new Vector(0, 0, 0), -1);
+    }
+
+    public double length() {
+        return Math.sqrt(this.speed.getX() * this.speed.getX()  + this.speed.getZ() * this.speed.getZ());
     }
 
     public String getPlayer() {
