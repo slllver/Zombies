@@ -28,8 +28,8 @@ public class MineZombie extends EntityZombie implements iCustomMob {
     }
 
     @Override
-    public void setup(double x, double y, double z, Inventory inventory, boolean isBaby, double health, double speed, double attackDamage) {
-        this.inventory = inventory;
+    public void setup(double x, double y, double z, boolean isBaby, double health, double speed, double attackDamage, Object... objects) {
+        this.inventory = (objects[0] instanceof Inventory) ? (Inventory) objects[0] : null;
         this.isBaby = isBaby;
 
         this.prepare(this.world.D(new BlockPosition(this)), null);
@@ -151,6 +151,12 @@ public class MineZombie extends EntityZombie implements iCustomMob {
         }
     }
 
+    // Prevent damage taken if the source is an exploding pigman
+    @Override
+    public boolean damageEntity(DamageSource damageSource, float v) {
+        return (!damageSource.translationIndex.equals("explosion.pigman")) && super.damageEntity(damageSource, v);
+    }
+
     // Set mob attributes
     private void setAttributes(double health, double speed, double attackDamage) {
         this.getAttributeInstance(GenericAttributes.maxHealth).setValue(health);
@@ -164,15 +170,15 @@ public class MineZombie extends EntityZombie implements iCustomMob {
     protected int getExpValue(EntityHuman entityhuman) {
         return 0;
     }
-    // Disable burning in daylight
 
+    // Disable burning in daylight
     @Override
     public boolean p() {
         return false;
     }
+
     // Prevent default drops from loot table?
     // TODO: Figure out custom loot tables
-
     @Override
     protected MinecraftKey J() {
         return null;

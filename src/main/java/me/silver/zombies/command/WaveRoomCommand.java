@@ -28,7 +28,6 @@ public class WaveRoomCommand extends BaseCommand {
 
     private static HashMap<Player, Location[]> corners = new HashMap<>();
     private static HashMap<String, Room> rooms = new HashMap<>();
-    private static HashMap<String, WaveMobTemplate> templates = new HashMap<>();
 
     @Default
     @Subcommand("create")
@@ -73,9 +72,9 @@ public class WaveRoomCommand extends BaseCommand {
                 for (int i = 0; i < count; i++) {
                     room.spawnZombie(null);
                 }
-            } else if (templates.containsKey(queryString)) {
+            } else if (WaveMobTemplate.templates.containsKey(queryString)) {
                 for (int i = 0; i < count; i++) {
-                    room.spawnZombie(templates.get(queryString));
+                    room.spawnZombie(WaveMobTemplate.templates.get(queryString));
                 }
             } else {
                 List<Pair<Integer, String>> numbers = new ArrayList<>();
@@ -112,7 +111,7 @@ public class WaveRoomCommand extends BaseCommand {
                 } else {
                     for (Pair<Integer, String> pair : numbers) {
                         for (int i = 0; i < pair.getLeft(); i++) {
-                            room.spawnZombie(templates.get(pair.getRight()));
+                            room.spawnZombie(WaveMobTemplate.templates.get(pair.getRight()));
                         }
                     }
 
@@ -120,7 +119,7 @@ public class WaveRoomCommand extends BaseCommand {
 
                     for (Pair<Integer, String> pair : percents) {
                         for (int i = 0; i < remaining * ((double)pair.getLeft() / 100d); i++) {
-                            room.spawnZombie(templates.get(pair.getRight()));
+                            room.spawnZombie(WaveMobTemplate.templates.get(pair.getRight()));
                         }
                     }
                 }
@@ -153,7 +152,7 @@ public class WaveRoomCommand extends BaseCommand {
     public static void createTemplate(CommandSender sender, String id, int x, int y, int z, boolean isBaby, double health, double speed, double attackDamage) {
         World world;
 
-        if (templates.containsKey(id)) {
+        if (WaveMobTemplate.templates.containsKey(id)) {
             sender.sendMessage("Error: template already exists with name: " + id);
             return;
         }
@@ -171,7 +170,7 @@ public class WaveRoomCommand extends BaseCommand {
         if (target.getType().equals(Material.CHEST)) {
             Chest chest = (Chest)target.getState();
 
-            templates.put(id, new WaveMobTemplate(((CraftWorld)world).getHandle(), chest.getInventory(), isBaby, health, speed, attackDamage));
+            WaveMobTemplate.templates.put(id, new WaveMobTemplate(((CraftWorld)world).getHandle(), chest.getInventory(), isBaby, health, speed, attackDamage));
             sender.sendMessage("Successfully created mob template with name: " + id);
         } else {
             sender.sendMessage("Error: target block must be a chest/trapped chest");
