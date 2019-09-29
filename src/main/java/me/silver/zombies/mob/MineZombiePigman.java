@@ -3,7 +3,7 @@ package me.silver.zombies.mob;
 import me.silver.zombies.util.ZExplosion;
 import me.silver.zombies.waveroom.WaveMobTemplate;
 import net.minecraft.server.v1_12_R1.*;
-import org.bukkit.inventory.Inventory;
+import org.bukkit.Location;
 
 public class MineZombiePigman extends EntityPigZombie implements iCustomMob {
 
@@ -14,8 +14,15 @@ public class MineZombiePigman extends EntityPigZombie implements iCustomMob {
     }
 
     @Override
-    public void setup(double x, double y, double z, boolean isBaby, double health, double speed, double attackDamage, Object... extras) {
-        this.zombie = (extras[0] instanceof WaveMobTemplate) ? (WaveMobTemplate) extras[0] : null;
+    public void setup(double x, double y, double z, boolean isBaby, double health, double speed, double attackDamage, Object... options) {
+
+        if (options.length > 0 && options[0] instanceof String) {
+            String template = (String) options[0];
+
+            if (WaveMobTemplate.templates.containsKey(template)) {
+                this.zombie = WaveMobTemplate.templates.get(template);
+            }
+        }
 
 //        this.prepare(this.world.D(new BlockPosition(this)), null);
         this.setPosition(x, y, z);
@@ -33,7 +40,7 @@ public class MineZombiePigman extends EntityPigZombie implements iCustomMob {
         explosion.createParticlesAndEvent(2, 0.7f);
 
         for (int i = 0; i < 4; i++) {
-            this.zombie.spawnMob(this.locX, this.locY, this.locZ);
+            this.zombie.spawnMob(new Location(this.world.getWorld(), this.locX, this.locY, this.locZ));
         }
     }
 

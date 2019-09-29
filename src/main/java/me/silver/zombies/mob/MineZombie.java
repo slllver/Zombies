@@ -1,6 +1,5 @@
 package me.silver.zombies.mob;
 
-import me.silver.zombies.Zombies;
 import me.silver.zombies.util.EquipmentUtils;
 import me.silver.zombies.util.PathfinderGoalTargetBySpeed;
 import net.minecraft.server.v1_12_R1.*;
@@ -29,24 +28,23 @@ public class MineZombie extends EntityZombie implements iCustomMob {
 
     @Override
     public void setup(double x, double y, double z, boolean isBaby, double health, double speed, double attackDamage, Object... objects) {
-        this.inventory = (objects[0] instanceof Inventory) ? (Inventory) objects[0] : null;
+        this.inventory = (objects.length > 0 && objects[0] instanceof Inventory) ? EquipmentUtils.cloneInventory((Inventory) objects[0]) : null;
         this.isBaby = isBaby;
 
         this.prepare(this.world.D(new BlockPosition(this)), null);
         this.setPosition(x, y, z);
-        this.world.addEntity(this);
         this.setAttributes(health, speed, attackDamage);
-
+        this.world.addEntity(this);
     }
 
+    // This method will likely never be used again
     public static MineZombie spawn(World world, double x, double y, double z, Inventory inventory, boolean isBaby, double health, double speed, double attackDamage) {
         MineZombie zombie = new MineZombie(world, inventory, isBaby);
 
         zombie.prepare(world.D(new BlockPosition(zombie)), null);
         zombie.setLocation(x, y, z, 0, 0);
-        world.addEntity(zombie);
-
         zombie.setAttributes(health, speed, attackDamage);
+        world.addEntity(zombie);
 
         return zombie;
     }
@@ -60,10 +58,6 @@ public class MineZombie extends EntityZombie implements iCustomMob {
         this.goalSelector.a(2, new PathfinderGoalZombieAttack(this, 1.0D, false));
         this.goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 1.0D));
         this.targetSelector.a(2, new PathfinderGoalTargetBySpeed<>(this, EntityHuman.class, true));
-    }
-
-    private void log(String message) {
-        Zombies.getInstance().getLogger().info(message);
     }
 
     // Additional code called on spawn (setting gear, spawning as baby/with chicken, etc)
@@ -183,4 +177,5 @@ public class MineZombie extends EntityZombie implements iCustomMob {
     protected MinecraftKey J() {
         return null;
     }
+
 }
