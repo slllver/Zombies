@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-// TODO: Rename command class to reduce ambiguity between WaveRoom.java and Room.java
+// TODO: Figure out how to get command contexts/descriptions and unknown catcher working
 @CommandAlias("wr")
 public class WaveRoomCommand extends BaseCommand {
 
@@ -159,7 +159,6 @@ public class WaveRoomCommand extends BaseCommand {
         }
     }
 
-    // TODO: Update so that options are processed by the mob when spawned rather than the command
     @Subcommand("template")
     @Syntax("[templateName] [mobType] [isBaby] [health] [speed] [damage] <options>")
     @Description("Creates a custom mob template")
