@@ -16,12 +16,15 @@ public class MineZombiePigman extends EntityPigZombie implements iCustomMob {
     @Override
     public void setup(double x, double y, double z, boolean isBaby, double health, double speed, double attackDamage, Object... options) {
 
-        //TODO: Figure out why zombie is always null (if that's even what's going on... UNIT TESTING!)
-        if (options.length > 0 && options[0] instanceof String) {
-            String template = (String) options[0];
+        if (options.length > 0) {
+            if (options[0] instanceof WaveMobTemplate) {
+                zombie = (WaveMobTemplate) options[0];
+            } else if (options[0] instanceof String) {
+                String template = (String) options[0];
 
-            if (WaveMobTemplate.templates.containsKey(template)) {
-                this.zombie = WaveMobTemplate.templates.get(template);
+                if (WaveMobTemplate.templates.containsKey(template)) {
+                    this.zombie = WaveMobTemplate.templates.get(template);
+                }
             }
         }
 

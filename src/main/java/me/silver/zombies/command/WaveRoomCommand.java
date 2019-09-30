@@ -163,7 +163,7 @@ public class WaveRoomCommand extends BaseCommand {
     @Syntax("[templateName] [mobType] [isBaby] [health] [speed] [damage] <options>")
     @Description("Creates a custom mob template")
     public static void createTemplate(CommandSender sender, String id, String mobType, boolean isBaby, double health, double speed, double attackDamage, @Optional String... options) {
-        sender.sendMessage(createTemplate(id, mobType, isBaby, health, speed, attackDamage, (Object) options));
+        sender.sendMessage(createTemplate(id, mobType, isBaby, health, speed, attackDamage, options));
     }
 
     // Having this return a string is kind of a dumb way to do this, but oh well
