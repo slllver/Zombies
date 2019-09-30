@@ -16,6 +16,7 @@ public class MineZombiePigman extends EntityPigZombie implements iCustomMob {
     @Override
     public void setup(double x, double y, double z, boolean isBaby, double health, double speed, double attackDamage, Object... options) {
 
+        //TODO: Figure out why zombie is always null (if that's even what's going on... UNIT TESTING!)
         if (options.length > 0 && options[0] instanceof String) {
             String template = (String) options[0];
 
@@ -37,7 +38,7 @@ public class MineZombiePigman extends EntityPigZombie implements iCustomMob {
         //TODO: Modify death behavior (explosion, zombie spawning, etc) based on isBaby value
         ZExplosion explosion = new ZExplosion(this.world, this, this.locX, this.locY, this.locZ, 5, 6, 5, 1.4);
         explosion.damageEntities("explosion.pigman");
-        explosion.createParticlesAndEvent(2, 0.7f);
+        explosion.createParticlesAndEvent(2, 0.7f, 1);
 
         for (int i = 0; i < 4; i++) {
             this.zombie.spawnMob(new Location(this.world.getWorld(), this.locX, this.locY, this.locZ));

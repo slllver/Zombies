@@ -32,7 +32,7 @@ public class Explode extends BaseCommand {
 
         ZExplosion explosion = new ZExplosion(world, null, location.getX(), location.getY(), location.getZ(), radius, damage, xzkb, ykb);
         explosion.damageEntities("explosion.pigman");
-        explosion.createParticlesAndEvent(2f, 0.7f);
+        explosion.createParticlesAndEvent(2f, 0.7f, 0);
 
 //        for (Entity entity : explosion.blockDensities.keySet()) {
 //            Bukkit.getLogger().info(String.valueOf(explosion.blockDensities.get(entity)));
