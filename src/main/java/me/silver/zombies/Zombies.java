@@ -6,6 +6,7 @@ import me.silver.zombies.command.Explode;
 import me.silver.zombies.command.WaveRoomCommand;
 import me.silver.zombies.listener.PlayerListener;
 import me.silver.zombies.mob.MineZombie;
+import me.silver.zombies.mob.MineZombiePigman;
 import me.silver.zombies.util.NMSUtils;
 import net.minecraft.server.v1_12_R1.ChatMessageType;
 import net.minecraft.server.v1_12_R1.IChatBaseComponent;
@@ -31,6 +32,7 @@ public class Zombies extends JavaPlugin {
 
     private void registerEntities() {
         NMSUtils.registerEntity("mine_zombie", NMSUtils.Type.ZOMBIE, MineZombie.class, false);
+        NMSUtils.registerEntity("mine_zombie_pigman", NMSUtils.Type.PIG_ZOMBIE, MineZombiePigman.class, false);
     }
 
     private void registerCommands() {

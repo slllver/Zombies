@@ -1,20 +1,14 @@
 package me.silver.zombies;
 
 import me.silver.zombies.mob.MineZombie;
-import me.silver.zombies.mob.iCustomMob;
 import me.silver.zombies.waveroom.WaveMobTemplate;
-import net.minecraft.server.v1_12_R1.BlockPosition;
-import net.minecraft.server.v1_12_R1.EntityMonster;
-import net.minecraft.server.v1_12_R1.EntityZombie;
+
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Random;
 
 public class Room {
@@ -65,10 +59,9 @@ public class Room {
                             airCount++;
                         } else {
                             if (template != null) {
-                                template.spawnMob(x + 0.5, y - 1, z + 0.5);
+                                template.spawnMob(new Location(world, x + 0.5, y - 1, z + 0.5));
                             } else {
-                                MineZombie zombie = MineZombie.spawn(nmsWorld, x + 0.5, y - 1,
-                                        z + 0.5, null, false, 20, 0.23, 3);
+                                MineZombie.spawn(nmsWorld, x + 0.5, y - 1, z + 0.5, null, false, 20, 0.23, 3);
                             }
 
                             return;
@@ -80,17 +73,6 @@ public class Room {
         }
 
     }
-
-    // Template for reusable spawn method
-//    public void spawn(Class<? extends EntityMonster> monster) {
-//        try {
-//            Constructor<?> constructor = monster.getConstructor(net.minecraft.server.v1_12_R1.World.class);
-//
-//            EntityMonster monster1 = (EntityMonster) constructor.newInstance(((CraftWorld)world).getHandle());
-//        } catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e) {
-//            e.printStackTrace();
-//        }
-//    }
 
     public World getWorld() {
         return world;

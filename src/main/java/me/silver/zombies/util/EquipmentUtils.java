@@ -1,8 +1,10 @@
 package me.silver.zombies.util;
 
 import net.minecraft.server.v1_12_R1.EnumItemSlot;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 
 public class EquipmentUtils {
 
@@ -48,5 +50,19 @@ public class EquipmentUtils {
         }
 
         return null;
+    }
+
+    public static Inventory cloneInventory(Inventory inventory) {
+        if (inventory == null) return null;
+
+        Inventory newInventory = Bukkit.createInventory(null, inventory.getSize());
+
+        for (ItemStack itemStack : inventory.getContents()) {
+            if (itemStack != null) {
+                newInventory.addItem(new ItemStack(itemStack));
+            }
+        }
+
+        return newInventory;
     }
 }

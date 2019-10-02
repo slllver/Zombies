@@ -80,11 +80,20 @@ public class ZExplosion {
         }
     }
 
-    public void createParticlesAndEvent(float volume, float pitch) {
+    public void createParticlesAndEvent(float volume, float pitch, int explodeType) {
         this.world.a(null, this.x, this.y, this.z, SoundEffects.bV, SoundCategory.BLOCKS, volume, pitch);
 //        this.world.addParticle(EnumParticle.EXPLOSION_HUGE, this.x, this.y, this.z, 1, 0, 0);
+        org.bukkit.World bWorld = this.world.getWorld();
 
-        this.world.getWorld().spawnParticle(Particle.EXPLOSION_HUGE, this.x, this.y, this.z, 1, 0, 0, 0);
+        if (explodeType == 1) {
+            // Do pigman explosion
+            bWorld.spawnParticle(Particle.FLAME, this.x, this.y, this.z, 250, 0, 0, 0, 0.5);
+            bWorld.spawnParticle(Particle.EXPLOSION_NORMAL, this.x, this.y, this.z, 100, 0, 0, 0, 0.5);
+            bWorld.spawnParticle(Particle.LAVA, this.x, this.y, this.z, 50, 0, 0, 0, 3);
+            bWorld.spawnParticle(Particle.EXPLOSION_LARGE, this.x, this.y, this.z, 10, 0, 0, 0);
+        } else {
+            bWorld.spawnParticle(Particle.EXPLOSION_HUGE, this.x, this.y, this.z, 1, 0, 0, 0);
+        }
 
         // TODO: Call event on explosion
     }
