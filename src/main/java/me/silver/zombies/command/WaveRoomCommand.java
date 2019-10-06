@@ -159,6 +159,8 @@ public class WaveRoomCommand extends BaseCommand {
         }
     }
 
+    // Casting options to an Object, as Intellij suggests, causes a NullPointerException due to MineZombiePigman not being able to access array indices, or something
+    @SuppressWarnings("ConfusingArgumentToVarargsMethod")
     @Subcommand("template")
     @Syntax("[templateName] [mobType] [isBaby] [health] [speed] [damage] <options>")
     @Description("Creates a custom mob template")
