@@ -74,15 +74,15 @@ public class Room {
 
     }
 
+    // TODO: Verify that each corner is actually South East(+X, +Z) / North West(-X, -Z) (Possibly in constructor)
+    public boolean isIntersecting(Room otherRoom) {
+        return this.cornerOne.getX() < otherRoom.cornerTwo.getX()
+                && this.cornerTwo.getX() > otherRoom.cornerOne.getX()
+                && this.cornerOne.getZ() < otherRoom.cornerTwo.getZ()
+                && this.cornerTwo.getZ() > otherRoom.cornerOne.getZ();
+    }
+
     public World getWorld() {
         return world;
-    }
-
-    public Vector getCornerOne() {
-        return cornerOne;
-    }
-
-    public Vector getCornerTwo() {
-        return cornerTwo;
     }
 }
