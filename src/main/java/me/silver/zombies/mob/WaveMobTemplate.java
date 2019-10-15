@@ -1,6 +1,5 @@
-package me.silver.zombies.waveroom;
+package me.silver.zombies.mob;
 
-import me.silver.zombies.mob.iCustomMob;
 import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;

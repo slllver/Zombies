@@ -1,9 +1,9 @@
-package me.silver.zombies.util;
+package me.silver.zombies.mob.ai;
 
+import me.silver.zombies.util.PlayerSpeed;
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.util.Vector;
 
 import java.util.Objects;
 

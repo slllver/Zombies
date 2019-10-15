@@ -3,9 +3,7 @@ package me.silver.zombies.command;
 import me.silver.zombies.Zombies;
 import me.silver.zombies.mob.MineZombie;
 import me.silver.zombies.mob.MineZombiePigman;
-import me.silver.zombies.waveroom.WaveMobTemplate;
-import net.minecraft.server.v1_12_R1.BlockPosition;
-import net.minecraft.server.v1_12_R1.EntityZombie;
+import me.silver.zombies.mob.WaveMobTemplate;
 import net.minecraft.server.v1_12_R1.GenericAttributes;
 import net.minecraft.server.v1_12_R1.World;
 import org.bukkit.Bukkit;
@@ -29,25 +27,34 @@ public class CreateZombie implements CommandExecutor {
         if (commandSender instanceof Player) {
             Player player = (Player) commandSender;
 
-            player.sendMessage("Made it this far + " + s);
-            player.sendMessage(strings);
+            if (!player.hasPermission("zombies.command.spawn")) {
+                player.sendMessage("You don't have permission to perform this command");
+                return true;
+            }
 
-            if (strings[0].toLowerCase().equals("p")) {
+            if (strings.length >= 1) {
+                if (strings[0].toLowerCase().equals("p")) {
 
-                String template = strings[1];
+                    String template = strings[1];
 
-                if (WaveMobTemplate.templates.containsKey(template)) {
-                    World world = ((CraftWorld)player.getWorld()).getHandle();
-                    Location l = player.getLocation();
+                    if (WaveMobTemplate.templates.containsKey(template)) {
+                        World world = ((CraftWorld)player.getWorld()).getHandle();
+                        Location l = player.getLocation();
 
-                    MineZombiePigman pigman = new MineZombiePigman(world);
-                    pigman.setup(l.getX(), l.getY(), l.getZ(), false, 1, 0.6, 6, WaveMobTemplate.templates.get(template));
+                        MineZombiePigman pigman = new MineZombiePigman(world);
+                        pigman.setup(l.getX(), l.getY(), l.getZ(), false, 1, 0.6, 6, WaveMobTemplate.templates.get(template));
 
-                    player.sendMessage("Successfully created zombie pigzombie!");
+                        player.sendMessage("Successfully created zombie pigzombie!");
+                    } else {
+                        player.sendMessage("Error: no template with name " + template);
+                    }
+
                 } else {
-                    player.sendMessage("Error: no template with name " + template);
+                    if (WaveMobTemplate.templates.containsKey(strings[0])) {
+                        WaveMobTemplate template = WaveMobTemplate.templates.get(strings[0]);
+                        template.spawnMob(player.getLocation());
+                    }
                 }
-
             } else {
                 Block targetBlock = player.getTargetBlock(null, 10);
 

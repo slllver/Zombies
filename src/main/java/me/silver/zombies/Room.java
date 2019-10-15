@@ -1,7 +1,7 @@
 package me.silver.zombies;
 
 import me.silver.zombies.mob.MineZombie;
-import me.silver.zombies.waveroom.WaveMobTemplate;
+import me.silver.zombies.mob.WaveMobTemplate;
 
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -26,8 +26,40 @@ public class Room {
 
     public Room(World world, Vector cornerOne, Vector cornerTwo) {
         this.world = world;
-        this.cornerOne = cornerOne;
-        this.cornerTwo = cornerTwo;
+
+        double maxX;
+        double minX;
+        double maxY;
+        double minY;
+        double maxZ;
+        double minZ;
+
+        if (cornerOne.getX() >= cornerTwo.getX()) {
+            maxX = cornerOne.getX();
+            minX = cornerTwo.getX();
+        } else {
+            maxX = cornerTwo.getX();
+            minX = cornerOne.getX();
+        }
+
+        if (cornerOne.getY() >= cornerTwo.getY()) {
+            maxY = cornerOne.getY();
+            minY = cornerTwo.getY();
+        } else {
+            maxY = cornerTwo.getY();
+            minY = cornerOne.getY();
+        }
+
+        if (cornerOne.getZ() >= cornerTwo.getZ()) {
+            maxZ = cornerOne.getZ();
+            minZ = cornerTwo.getZ();
+        } else {
+            maxZ = cornerTwo.getZ();
+            minZ = cornerOne.getZ();
+        }
+
+        this.cornerOne = new Vector(maxX, maxY, maxZ);
+        this.cornerTwo = new Vector(minX, minY, minZ);
 
         this.random = new Random();
 
@@ -74,7 +106,6 @@ public class Room {
 
     }
 
-    // TODO: Verify that each corner is actually South East(+X, +Z) / North West(-X, -Z) (Possibly in constructor)
     public boolean isIntersecting(Room otherRoom) {
         return this.cornerOne.getX() < otherRoom.cornerTwo.getX()
                 && this.cornerTwo.getX() > otherRoom.cornerOne.getX()
