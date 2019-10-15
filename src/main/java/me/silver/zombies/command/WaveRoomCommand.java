@@ -6,7 +6,7 @@ import me.silver.zombies.Room;
 import me.silver.zombies.mob.MineZombie;
 import me.silver.zombies.mob.MineZombiePigman;
 import me.silver.zombies.util.Pair;
-import me.silver.zombies.waveroom.WaveMobTemplate;
+import me.silver.zombies.mob.WaveMobTemplate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
 
 // TODO: Figure out how to get command contexts/descriptions and unknown catcher working
 @CommandAlias("wr")
+@CommandPermission("zombies.command")
 public class WaveRoomCommand extends BaseCommand {
 
     // Might be used again with individual corner setting command
@@ -33,6 +34,7 @@ public class WaveRoomCommand extends BaseCommand {
 
     @Default
     @Subcommand("create")
+    @CommandPermission("zombies.command.room")
     public static void onCreate(CommandSender sender, String name, int x, int y, int z, int x2, int y2, int z2) {
         if (rooms.containsKey(name)) {
             sender.sendMessage("Error: Room with name \"" + name + "\" already exists");
@@ -58,6 +60,7 @@ public class WaveRoomCommand extends BaseCommand {
     }
 
     @Subcommand("remove")
+    @CommandPermission("zombies.command.room")
     public static void onRemove(CommandSender sender, String roomName) {
         rooms.remove(roomName);
 
@@ -65,6 +68,7 @@ public class WaveRoomCommand extends BaseCommand {
     }
 
     @Subcommand("spawn")
+    @CommandPermission("zombies.command.spawn")
     public static void spawn(CommandSender sender, String roomName, int count, @Optional String queryString) {
         Room room = rooms.get(roomName);
 
@@ -135,10 +139,11 @@ public class WaveRoomCommand extends BaseCommand {
 
 
 
-    @Subcommand("template")
+    @Subcommand("template inventory|ti")
+    @CommandPermission("zombies.command.template")
     @Syntax("[templateName] [mobType] [x] [y] [z] [isBaby] [health] [speed] [damage] <options>")
     @Description("Creates a custom mob template with an inventory at the given location")
-    public static void createTemplate(CommandSender sender, String id, String mobType, int x, int y, int z, boolean isBaby, double health, double speed, double attackDamage, @Optional String... options) {
+    public static void createTemplate(CommandSender sender, String id, String mobType, int x, int y, int z, boolean isBaby, double health, double speed, double attackDamage, @Default("") String options) {
         World world;
 
         if (sender instanceof Player) {
@@ -153,17 +158,20 @@ public class WaveRoomCommand extends BaseCommand {
 
         if (target.getType().equals(Material.CHEST)) {
             Chest chest = (Chest) target.getState();
-            sender.sendMessage(createTemplate(id, mobType, isBaby, health, speed, attackDamage, chest.getInventory(), options));
+            sender.sendMessage(createTemplate(id, mobType, isBaby, health, speed, attackDamage, chest.getInventory(), options.split(",")));
         } else {
             sender.sendMessage("Error: target block must be a chest/trapped chest");
         }
     }
 
-    @Subcommand("template")
+    // Casting options to an Object, as Intellij suggests, causes a NullPointerException due to MineZombiePigman not being able to access array indices, or something
+    @SuppressWarnings("ConfusingArgumentToVarargsMethod")
+    @Subcommand("template add|template")
+    @CommandPermission("zombies.command.template")
     @Syntax("[templateName] [mobType] [isBaby] [health] [speed] [damage] <options>")
     @Description("Creates a custom mob template")
-    public static void createTemplate(CommandSender sender, String id, String mobType, boolean isBaby, double health, double speed, double attackDamage, @Optional String... options) {
-        sender.sendMessage(createTemplate(id, mobType, isBaby, health, speed, attackDamage, options));
+    public static void createTemplate(CommandSender sender, String id, String mobType, boolean isBaby, double health, double speed, double attackDamage, @Default("") String options) {
+        sender.sendMessage(createTemplate(id, mobType, isBaby, health, speed, attackDamage, options.split(",")));
     }
 
     // Having this return a string is kind of a dumb way to do this, but oh well
@@ -196,29 +204,12 @@ public class WaveRoomCommand extends BaseCommand {
         return "Successfully created mob template with name: " + id;
     }
 
-    @Subcommand("template")
+    @Subcommand("template remove")
+    @CommandPermission("zombies.command.template")
     public static void removeTemplate(CommandSender sender, String templateName) {
         WaveMobTemplate.templates.remove(templateName);
 
         sender.sendMessage("Removed template '" + templateName + "'");
-    }
-
-    @CatchUnknown
-    public static void onUnknownCommand(CommandSender sender, String[] args) {
-        if (args.length > 0) {
-            String subCommand = args[0];
-
-            if (subCommand.toLowerCase().equals("template")) {
-                String helpMessage = "Usage: \n" +
-                        "/waveroom template [templateName] [mobType] [isBaby] [health] [speed] [damage] <options>\n" +
-                        "/waveroom template [templateName] [mobType] [x] [y] [z] [isBaby] [health] [speed] [damage]\n" +
-                        "/waveroom remove [templateName]";
-
-                sender.sendMessage(helpMessage);
-            } else {
-                sender.sendMessage("Unknown command: /waveroom " + args[0]);
-            }
-        }
     }
 
 }

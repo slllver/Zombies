@@ -2,6 +2,7 @@ package me.silver.zombies.command;
 
 import co.aikar.commands.BaseCommand;
 import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import me.silver.zombies.util.ZExplosion;
@@ -14,10 +15,12 @@ import org.bukkit.craftbukkit.v1_12_R1.CraftWorld;
 import org.bukkit.entity.Player;
 
 @CommandAlias("explode")
+@CommandPermission("zombies.command")
 public class Explode extends BaseCommand {
 
     @Default
     @Subcommand("e")
+    @CommandPermission("zombies.command.explode")
     public static void explode(Player sender, Float size) {
         World world = ((CraftWorld)sender.getWorld()).getHandle();
         Location location = sender.getLocation();
@@ -26,6 +29,7 @@ public class Explode extends BaseCommand {
     }
 
     @Subcommand("z")
+    @CommandPermission("zombies.command.explode")
     public static void zExplode(Player sender, Float radius, float damage, float xzkb, float ykb) {
         World world = ((CraftWorld)sender.getWorld()).getHandle();
         Location location = sender.getLocation();

@@ -9,6 +9,7 @@ commands:
     usage: /createzombie (must be looking at a chest)
     aliases:
       - cz
+    permission: zombies.command.spawn
 #  waveroom:
 #    description: Creates a room in which zombies can be spawned in a controlled manner
 #    usade: idk

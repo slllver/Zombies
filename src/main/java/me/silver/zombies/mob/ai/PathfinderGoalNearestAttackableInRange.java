@@ -1,4 +1,4 @@
-package me.silver.zombies.util;
+package me.silver.zombies.mob.ai;
 
 import net.minecraft.server.v1_12_R1.*;
 import org.bukkit.event.entity.EntityTargetEvent;
@@ -23,7 +23,7 @@ public class PathfinderGoalNearestAttackableInRange<T extends EntityLiving> exte
     @Override
     public boolean a() {
         if (this.targetEntityType == EntityHuman.class || this.targetEntityType == EntityPlayer.class) {
-            EntityHuman entityHuman = this.e.world.b(this.e, 5.0);
+            EntityHuman entityHuman = this.e.world.b(this.e, 16.0);
 
             if (entityHuman != null) {
                 this.targetEntity = entityHuman;
@@ -38,7 +38,7 @@ public class PathfinderGoalNearestAttackableInRange<T extends EntityLiving> exte
     public boolean b() {
         Vector currentEntityLocation = new Vector(this.e.locX, this.e.locY, this.e.locZ);
         Vector targetLocation = new Vector(this.targetEntity.locX, this.e.locY, this.targetEntity.locZ);
-        return !(currentEntityLocation.distance(targetLocation) > 8.0);
+        return !(currentEntityLocation.distance(targetLocation) > 16.0);
     }
 
     @Override
